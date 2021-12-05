@@ -1,0 +1,88 @@
+//These queries are written assuming that the names of the tables are 'artists' and 'tracks'.
+//The queries are all untested.
+
+Query 1:
+SQL: select _id, artist_id, name, sum(tracks) from artists where exists (select tracks from artists) group by artists;
+Mongodb: 
+db.artists.group({
+
+   "key":{
+         "artists": true
+   },
+   "initial": {
+         "sumtracks": 0
+   },
+   "reduce": function( obj , prev ){
+
+
+
+         prev.sumtracks  = prev.sumtracks  + obj.tracks  - 0;
+
+   },
+   "finalize": function( prev ){
+
+   },
+   "cond": {
+ 
+   }
+
+});
+
+
+Query 2:
+SQL: select avg(danceability) from tracks where track_id LIKE 70;
+Mongodb:
+db.tracks.find({
+ "track_id " :  70
+},{
+   "avg(danceability)": 1
+}
+);
+
+Query 3:
+SQL: select _id, sum(duration) from tracks group by artist_id;
+Mongodb:
+db..group({
+
+   "key":{
+         "artist_id": true
+   },
+   "initial": {
+         "sumduration": 0
+   },
+   "reduce": function( obj , prev ){
+
+         prev.sumduration  = prev.sumduration  + obj.duration  - 0;
+
+   },
+   "finalize": function( prev ){
+
+   },
+   "cond": {
+ 
+   }
+
+});
+
+Query 4:
+Mongodb:
+db.trackst, artists a .find({
+ "release date ":{ "$gt" :  "1950-01-01" }
+},{
+   "t_id": 1,
+   "t.name": 1,
+   "a.name": 1,
+   "t.release_date": 1
+}
+);
+SQL: select t_id, t.name, a.name, t.release_date from tracks t, artists a where release date > "1950-01-01"
+Mongodb:
+db.trackst, artists a .find({
+ "release date ":{ "$gt" :  "1950-01-01" }
+},{
+   "t_id": 1,
+   "t.name": 1,
+   "a.name": 1,
+   "t.release_date": 1
+}
+);
