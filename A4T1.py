@@ -1,5 +1,5 @@
 from pymongo import MongoClient
-
+from bson.json_util import loads
 
 def dropCOllections(database, names):
 
@@ -8,35 +8,23 @@ def dropCOllections(database, names):
 
 def getData(name):
 
-    with open(name) as file:
-        print("FIle opened? :O")
-        data = file.read()
-    data = data.replace("$oid", "ObjectId")
-    file.close()
-    return eval(data)
+    with open(name, encoding="utf8") as file:
+        data = loads(file.read())
+    return data
 
 def main():
-    file_names = ["artists.json", "tracks.json"]
-    #https://docs.mongodb.com/manual/administration/install-community/
-    #USE VERSION 3.7.0 NOT 4 of mongodb
-    #https://pymongo.readthedocs.io/en/stable/tutorial.html
 
-    client = MongoClient('mongodb://localhost:27012')
-    db_name = "A4dbNorm"
-    database = client[db_name]
-    artists_collection = database[file_names[0][:-5]]
-    tracks_collection  = database[file_names[1][:-5]]
-    collections = database.list_collection_names()
-    for name in (file_names):
-        if(name[:-5] in collections):
-            print(f"collection already '{name[:-5]}' exists")
+    file_names          = ["artists.json", "tracks.json"]
+    client              = MongoClient('mongodb://localhost:27017')
+    db_name             = "A4dbNorm"
+    database            = client[db_name]
+    artists_collection  = database[file_names[0][:-5]]
+    tracks_collection   = database[file_names[1][:-5]]
+    artists             = getData(file_names[0])
+    tracks              = getData(file_names[1])
+    artists_collection.insert_many(artists)
+    tracks_collection.insert_many(tracks)
 
-    artists = getData(file_names[0])
-    tracks  = getData(file_names[1])
-    database = dropCOllections(database, file_names)
-
-    
-
-
+    #database = dropCOllections(database, file_names) used for testing
 if __name__ == "__main__":
     main()
