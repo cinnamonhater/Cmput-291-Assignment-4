@@ -18,7 +18,6 @@ def embedData(artists, tracks):
             for track in tracks:
                 if(track['track_id'] == track_id):
                     artists[i]['tracks'][j] = track
-
     return artists
 
 def main():
