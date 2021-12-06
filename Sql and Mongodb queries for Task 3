@@ -64,17 +64,7 @@ db..group({
 
 });
 
-Query 4:
-Mongodb:
-db.trackst, artists a .find({
- "release date ":{ "$gt" :  "1950-01-01" }
-},{
-   "t_id": 1,
-   "t.name": 1,
-   "a.name": 1,
-   "t.release_date": 1
-}
-);
+Query 4:SQL: select t_id, t.name, a.name, t.release_date from tracks t, artists a where release date > "1950-01-01"
 SQL: select t_id, t.name, a.name, t.release_date from tracks t, artists a where release date > "1950-01-01"
 Mongodb:
 db.trackst, artists a .find({
@@ -86,3 +76,4 @@ db.trackst, artists a .find({
    "t.release_date": 1
 }
 );
+
